@@ -1,5 +1,7 @@
 require "gab_bot/version"
 
 module GabBot
-  # Your code goes here...
+  def execute
+    puts "Running version #{VERSION}"
+  end
 end
