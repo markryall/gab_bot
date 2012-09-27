@@ -10,7 +10,7 @@ module GabBot
     print "Please authenticate with securid then hit enter\n> "
     $stdin.gets
     Cinch::Bot.new do
-        configure do |c|
+      configure do |c|
         c.nick = args.shift
         c.server = args.shift
         c.port = args.shift.to_i
@@ -25,7 +25,7 @@ module GabBot
           m.reply "work phone is #{work_phone}" unless work_phone.strip.empty?
           m.reply "mobile phone is #{mobile_phone}" unless mobile_phone.empty?
         rescue Watir::Exception::UnknownObjectException
-          m.reply "couldn't find a details for #{text} sorry"
+          m.reply "couldn't find details for \"#{text}\" sorry"
         end
       end
     end.start
