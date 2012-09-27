@@ -1,5 +1,6 @@
 require 'cinch'
 require 'ripl_watir'
+require 'highline/import'
 
 module GabBot
   include RiplWatir::Commands
@@ -7,8 +8,9 @@ module GabBot
   def execute *args
     RiplWatir.create
     visit_page(:gab)
-    print "Please authenticate with securid then hit enter\n> "
-    $stdin.gets
+    username = ask 'username > '
+    password = ask 'password > '
+    on_page(:gab).login username, password
     Cinch::Bot.new do
       configure do |c|
         c.nick = args.shift

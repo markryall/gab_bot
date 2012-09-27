@@ -19,5 +19,6 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'cinch'
   gem.add_dependency 'ripl-watir'
+  gem.add_dependency 'highline'
   gem.add_development_dependency 'rake'
 end
