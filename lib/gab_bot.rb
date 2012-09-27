@@ -7,6 +7,8 @@ module GabBot
   def execute *args
     RiplWatir.create
     visit_page(:gab)
+    print "Please authenticate with securid then hit enter\n> "
+    $stdin.gets
     Cinch::Bot.new do
         configure do |c|
         c.nick = args.shift
@@ -15,15 +17,15 @@ module GabBot
         c.channels = args
       end
 
-      on :message, /^tell me about (.+)$/ do |m, text|
+      on :message, /^gab (.+)$/ do |m, text|
         visit_page(:gab).search text
-        name, email, work_phone, mobile_phone, aliases, gtalk = on_page(:gab).information
-        if name
+        begin
+          name, email, work_phone, mobile_phone, aliases, gtalk = on_page(:gab).information
           m.reply "contact details for #{name} (#{email}):"
           m.reply "work phone is #{work_phone}" unless work_phone.strip.empty?
           m.reply "mobile phone is #{mobile_phone}" unless mobile_phone.empty?
-        else
-          m.reply "couldn't find a phone number for #{text} sorry"
+        rescue Watir::Exception::UnknownObjectException
+          m.reply "couldn't find a details for #{text} sorry"
         end
       end
     end.start
