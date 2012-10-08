@@ -11,15 +11,21 @@ module GabBot
     username = ask 'username > '
     password = ask 'password > '
     on_page(:gab).login username, password
+    nick, server, port, *channels = *args
     Cinch::Bot.new do
       configure do |c|
-        c.nick = args.shift
-        c.server = args.shift
-        c.port = args.shift.to_i
-        c.channels = args
+        c.nick = nick
+        c.server = server
+        c.port = port.to_i
+        c.channels = channels
       end
 
-      on :message, /^gab (.+)$/ do |m, text|
+      on(:message, /^#{nick} help$/) do |m|
+        m.reply "usage: #{nick} search <criteria> - search gab for contact information"
+        m.reply "code:  https://github.com/markryall/gab_bot"
+      end
+
+      on :message, /^#{nick} search (.+)$/ do |m, text|
         visit_page(:gab).search text
         begin
           name, email, work_phone, mobile_phone, aliases, gtalk = on_page(:gab).information
