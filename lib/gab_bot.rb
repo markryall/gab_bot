@@ -3,6 +3,7 @@ require 'ripl_watir'
 require 'highline/import'
 
 module GabBot
+  REFRESH_TIME = 60*60
   include RiplWatir::Commands
 
   def execute *args
@@ -12,6 +13,8 @@ module GabBot
     password = ask 'password > '
     on_page(:gab).login username, password
     nick, server, port, *channels = *args
+    last_request_time = Time.now
+
     Cinch::Bot.new do
       configure do |c|
         c.nick = nick
@@ -20,12 +23,20 @@ module GabBot
         c.channels = channels
       end
 
-      on(:message, /^#{nick} help$/) do |m|
+      on :catchall do |m|
+        if Time.now - last_request_time > REFRESH_TIME
+          last_request_time = Time.now
+          visit_page(:gab).search 'test'
+        end
+      end
+
+      on :message, /^#{nick} help$/  do |m|
         m.reply "usage: #{nick} search <criteria> - search gab for contact information"
         m.reply "code:  https://github.com/markryall/gab_bot"
       end
 
       on :message, /^#{nick} search (.+)$/ do |m, text|
+        last_request_time = Time.now
         visit_page(:gab).search text
         begin
           name, email, work_phone, mobile_phone, aliases, gtalk = on_page(:gab).information
