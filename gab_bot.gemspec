@@ -5,7 +5,7 @@ require 'gab_bot/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "gab_bot"
-  gem.version       = GabBot::VERSION
+  gem.version       = '0.0.1'
   gem.authors       = ["Mark Ryall"]
   gem.email         = ["mark@ryall.name"]
   gem.description   = %q{TODO: Write a gem description}
